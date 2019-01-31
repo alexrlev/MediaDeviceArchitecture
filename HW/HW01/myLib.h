@@ -1,5 +1,5 @@
-#ifndef HEADER_H
-#define HEADER_H
+#ifndef MY_LIB_H
+#define HMY_LIB_H
 
 // GBA Video Registers and Flags
 #define REG_DISPCTL (*(unsigned short *)0x4000000)

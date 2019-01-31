@@ -1,6 +1,6 @@
-#include "header.h"
-#include "standards.c"
+#include "myLib.h"
 
+void initialize();
 void frame1();
 void frame2();
 void frame3();
@@ -8,7 +8,7 @@ void delay();
 
 int main() {
 
-	REG_DISPCTL = MODE3 | BG2_ENABLE;
+	initialize();
 
 	while(1) {
 		fillScreen(BLACK);
@@ -27,6 +27,10 @@ int main() {
 		delay(200);
 	}	
 
+}
+
+void initialize() {
+	REG_DISPCTL = MODE3 | BG2_ENABLE;
 }
 
 void frame1() {

@@ -1,4 +1,4 @@
-PRODUCT_NAME       = HW01
+PRODUCT_NAME       = Lab02
 SOURCES            = main.c myLib.c
 CCPATH             = C:\cygwin64\bin
 DKPATH             = C:\devkitPro

@@ -1,4 +1,4 @@
-#include "header.h"
+#include "myLib.h"
 
 unsigned short *videoBuffer = (unsigned short *)0x6000000;
 
