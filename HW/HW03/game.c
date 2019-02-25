@@ -6,16 +6,22 @@
 PLAYER player;
 BULLET bullets[BULLETCOUNT];
 BALL balls[BALLCOUNT];
+unsigned short bgColor;
 int ballsRemaining;
+int losing;
 
-// Initialize the game
+// Initialize game
 void initGame() {
 
 	initPlayer();
     initBullets();
     initBalls();
 
-    // Initialize the score
+    bgColor = DARKGREEN;
+
+    losing = 0;
+
+    // Initialize score
 	ballsRemaining = BALLCOUNT;
 }
 
@@ -37,7 +43,6 @@ void updateGame() {
 void drawGame() {
 
 	drawPlayer();
-	drawBar();
 
 	// Draw all the bullets
 	for (int i = 0; i < BULLETCOUNT; i++)
@@ -48,41 +53,22 @@ void drawGame() {
 		drawBall(&balls[i]);
 }
 
-// Draws the bar protecting the player
-void drawBar() {
-	drawRect(120, 0, 3, 240, RED);
-}
-
 // Initialize the player
 void initPlayer() {
 
 	player.row = 130;
-	player.col = 118;
+	player.col = 113;
 	player.oldRow = player.row;
 	player.oldCol = player.col;
 	player.cdel = 1;
-	player.height = 10;
-	player.width = 5;
-	player.color = GREEN;
+	player.height = 2;
+	player.width = 20;
+	player.color = BLACK;
 	player.bulletTimer = 20;
 }
 
 // Handle every-frame actions of the player
 void updatePlayer() {
-
-	// Move the player
-	if (BUTTON_HELD(BUTTON_LEFT)
-		&& player.col >= player.cdel) {
-
-		player.col -= player.cdel;
-
-	} else if (BUTTON_HELD(BUTTON_RIGHT)
-		&& player.col + player.width - 1 < SCREENWIDTH - player.cdel) {
-
-		player.col += player.cdel;
-
-	}
-
 	// Fire bullets
 	if (BUTTON_PRESSED(BUTTON_A) && player.bulletTimer >= 20) {
 
@@ -96,8 +82,8 @@ void updatePlayer() {
 // Draw the player
 void drawPlayer() {
 
-	drawRect(player.oldRow, player.oldCol, player.height, player.width, BLACK);
-	drawRect(player.row, player.col, player.height, player.width, player.color);
+	drawBox(player.oldRow, player.oldCol, player.height, player.width, DARKGREEN);
+	drawBox(player.row, player.col, player.height, player.width, player.color);
 
 	player.oldRow = player.row;
 	player.oldCol = player.col;
@@ -160,10 +146,10 @@ void updateBullet(BULLET* b) {
 void drawBullet(BULLET* b) {
 
 	if(b->active) {
-		drawRect(b->oldRow, b->oldCol, b->height, b->width, BLACK);
-		drawRect(b->row, b->col, b->height, b->width, b->color);
+		drawBox(b->oldRow, b->oldCol, b->height, b->width, DARKGREEN);
+		drawBox(b->row, b->col, b->height, b->width, b->color);
 	} else if (!b->erased) {
-		drawRect(b->oldRow, b->oldCol, b->height, b->width, BLACK);
+		drawBox(b->oldRow, b->oldCol, b->height, b->width, DARKGREEN);
 		b->erased = 1;
 	}
 	b->oldRow = b->row;
@@ -175,15 +161,15 @@ void initBalls() {
 
 	for (int i = 0; i < BALLCOUNT; i++) {
 
-		balls[i].height = 10;
-		balls[i].width = 10;
-		balls[i].row = rand() % 110;
+		balls[i].height = 7;
+		balls[i].width = 7;
+		balls[i].row = 15;
 		balls[i].col = rand() % 130 + 10;
 		balls[i].oldRow = player.row;
 		balls[i].oldCol = player.col;
 		balls[i].rdel = 1;
 		balls[i].cdel = 1;
-		balls[i].color = BLUE;
+		balls[i].color = WHITE;
 		balls[i].active = 1;
 		balls[i].erased = 0;
 	}
@@ -194,11 +180,40 @@ void updateBall(BALL* b) {
 
 	if (b->active) {
 
-		// Bounce the ball off the sides of the box
-		if (b->row <= 0 || b->row + b->height-1 >= 120)
+		//bounce rectangle off walls
+		if ((b->row <= 0) || ((b->row + b->height - 1) >= (SCREENHEIGHT - 1))) {
 			b->rdel *= -1;
-		if (b->col <= 0 || b->col + b->width-1 >= SCREENWIDTH-1)
+		}
+		if ((b->col <= 0) || ((b->col + b->width - 1) >= (SCREENWIDTH - 1))) {
 			b->cdel *= -1;
+		}
+		//bounce ball off outside of goal
+		if ((b->row + b->height) >= 139) {
+			if ((b->col > 70) && ((b->col + b->width) < 170)) {
+				losing = 1;
+				//goToLose(); //ball enters goal:(
+			} 
+			if (((b->col < 69) || (b->col > 166 && b->col < 171)) 
+				&& (b->row + b->height == 140)) {
+				b->rdel *= -1; //bounce up off side poles
+			} else if (((b->col + b->width - 1) == 69 && b->cdel > 0)|| (b->col == 171 && b->cdel < 0)) {
+				b->cdel *= -1; //bounce left/right off side poles
+			}
+		}
+
+		//bounce rectangle off paddle
+		if (collision(b->row, b->col, b->height, b->width, 
+				player.row, player.col, player.height, player.width) == 1) {
+			if ((b->col == player.col + player.width - 1) || (b->col + b->width - 1 == player.col)) {
+				b->cdel *= -1;
+			}
+			b->rdel *= -1;
+		} else {
+			if ((player.col > 0) && BUTTON_HELD(BUTTON_LEFT)) //paddle left movement
+				player.col--;
+			if ((player.col + player.width < 240) && BUTTON_HELD(BUTTON_RIGHT)) //paddle right
+				player.col++;
+		}
 
 		// Move the ball
 		b->row += b->rdel;
@@ -224,11 +239,22 @@ void updateBall(BALL* b) {
 void drawBall(BALL* b) {
 
 	if(b->active) {
-		drawRect(b->oldRow, b->oldCol, b->height, b->width, BLACK);
-		drawRect(b->row, b->col, b->height, b->width, b->color);
-		
+		drawBox(b->oldRow, b->oldCol, b->height, b->width, bgColor);
+		//draw new rectangle & paddle positions
+		drawBox(b->row, b->col, b->height, b->width, WHITE);
+
+		//draw spots on soccer ball
+		drawBox((b->row + 1), (b->col + 4), 2, 2, BLACK);
+		drawBox((b->row + 3), b->col, 2, 1, BLACK);
+		drawBox((b->row + 6), (b->col + 3), 1, 2, BLACK);
+
+		//make rectangle a little rounder
+		setPixel(b->row, b->col, bgColor);
+		setPixel(b->row, (b->col + b->width - 1), bgColor);
+		setPixel((b->row + b->height - 1), b->col, bgColor);
+		setPixel((b->row + b->height - 1), (b->col + b->width - 1), bgColor);
 	} else if (!b->erased) {
-		drawRect(b->oldRow, b->oldCol, b->height, b->width, BLACK);
+		drawBox(b->oldRow, b->oldCol, b->height, b->width, DARKGREEN);
 		b->erased = 1;
 	}
 	b->oldRow = b->row;
