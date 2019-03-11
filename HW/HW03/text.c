@@ -12,8 +12,6 @@ void drawChar(int row, int col, char ch, unsigned short color) {
             }
     	}
     }
-
-
 }
 
 // Draws string
@@ -24,5 +22,4 @@ void drawString(int row, int col, char *str, unsigned short color) {
 		col += 6;
 		str++;
 	}
-
 }
