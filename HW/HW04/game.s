@@ -615,7 +615,7 @@ initGame:
 	bl	initBalls
 	mov	lr, #8
 	ldr	ip, .L98+8
-	mov	r3, #256
+	mov	r3, #512
 	mov	r2, #83886080
 	ldr	r1, .L98+12
 	mov	r0, #3

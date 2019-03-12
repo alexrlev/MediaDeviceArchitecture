@@ -21,7 +21,7 @@ void initGame() {
 
     unsigned short colors[NUMCOLORS] = {BLACK, PURPLE, RED, WHITE, YELLOW};
 
-    DMANow(3, brickPal, PALETTE, 256);
+    DMANow(3, brickPal, PALETTE, brickPalLen);
 
     for (int i = 0; i < NUMCOLORS; i++) {
         PALETTE[256-NUMCOLORS+i] = colors[i];

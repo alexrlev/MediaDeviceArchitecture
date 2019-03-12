@@ -943,7 +943,7 @@ void initGame() {
 
     unsigned short colors[5] = {0, ((18) | (4)<<5 | (18)<<10), ((31) | (0)<<5 | (0)<<10), ((31) | (31)<<5 | (31)<<10), ((31) | (31)<<5 | (0)<<10)};
 
-    DMANow(3, brickPal, ((unsigned short *)0x5000000), 256);
+    DMANow(3, brickPal, ((unsigned short *)0x5000000), 512);
 
     for (int i = 0; i < 5; i++) {
         ((unsigned short *)0x5000000)[256-5 +i] = colors[i];

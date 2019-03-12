@@ -1,5 +1,5 @@
 PRODUCT_NAME       = Lab07
-SOURCES            = main.c game.c myLib.c skyTiles.c pumpkin.c
+SOURCES            = main.c myLib.c skyTiles.c
 CCPATH             = C:\cygwin64\bin
 DKPATH             = C:\devkitPro
 VBASIM             = C:\vbam-2.0.1\bin\visualboyadvance-m.exe
