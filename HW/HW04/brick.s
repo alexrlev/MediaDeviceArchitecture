@@ -274,51 +274,25 @@ brickPal:
 	.short	0
 	.short	0
 	.type	brickBitmap, %object
-	.size	brickBitmap, 108
+	.size	brickBitmap, 64
 brickBitmap:
 	.short	257
 	.short	256
-	.short	1
-	.short	257
-	.short	1
-	.short	0
-	.short	257
-	.short	256
-	.short	1
-	.short	257
-	.short	1
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	257
-	.short	1
-	.short	257
-	.short	1
-	.short	1
-	.short	0
-	.short	257
-	.short	1
-	.short	257
-	.short	1
-	.short	1
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	1
 	.short	257
 	.short	256
 	.short	257
+	.short	256
+	.short	257
+	.short	256
 	.short	0
 	.short	0
-	.short	1
+	.short	0
+	.short	0
+	.short	256
+	.short	257
+	.short	256
+	.short	257
+	.short	256
 	.short	257
 	.short	256
 	.short	257
@@ -326,8 +300,12 @@ brickBitmap:
 	.short	0
 	.short	0
 	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
+	.short	1
+	.short	257
+	.short	1
+	.short	257
+	.short	1
+	.short	257
+	.short	1
+	.short	257
 	.ident	"GCC: (devkitARM release 50) 8.2.0"

@@ -60,7 +60,7 @@ void initPlayer() {
 	
 	//player 1
 	player1.row = 146;
-	player1.col = 120;
+	player1.col = 180;
 	player1.cdel = 1;
 	player1.height = 2;
 	player1.width = 27;
@@ -68,7 +68,7 @@ void initPlayer() {
 	
 	//player 2
 	player2.row = 146;
-	player2.col = 60;
+	player2.col = 100;
 	player2.cdel = 1;
 	player2.height = 2;
 	player2.width = 27;
@@ -115,8 +115,8 @@ void initBlocks() {
 
 	for (int i = 0; i < BLOCKCOUNT; i++) {
 
-		blocks[i].height = 9;
-		blocks[i].width = 9;
+		blocks[i].height = 8;
+		blocks[i].width = 8;
 		blocks[i].row = rand() % 50 + 2;
 		blocks[i].col = rand()%220;
 		blocks[i].active = 1;

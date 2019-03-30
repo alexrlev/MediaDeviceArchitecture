@@ -5,7 +5,6 @@
 #include "game.h"
 #include "wall.h"
 
-
 //prototypes
 void initialize();
 void goToStart();

@@ -188,8 +188,8 @@ initPlayer:
 	push	{r4, r5, r6, lr}
 	mov	ip, #1
 	mov	lr, #146
-	mov	r6, #120
-	mov	r5, #60
+	mov	r6, #180
+	mov	r5, #100
 	mov	r4, #253
 	mov	r0, #2
 	mov	r1, #27
@@ -454,7 +454,7 @@ initBlocks:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, r7, r8, r9, r10, lr}
-	mov	r9, #9
+	mov	r9, #8
 	ldr	r8, .L77
 	ldr	r4, .L77+4
 	ldr	r7, .L77+8
@@ -594,8 +594,8 @@ initGame:
 	mov	lr, #146
 	mov	r0, #2
 	mov	r1, #27
-	mov	r6, #120
-	mov	r5, #60
+	mov	r6, #180
+	mov	r5, #100
 	mov	r4, #253
 	ldr	r2, .L98
 	strh	r3, [r2, #20]	@ movhi

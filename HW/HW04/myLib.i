@@ -164,7 +164,6 @@ void drawImage3(int row, int col, int height, int width, const unsigned short *i
 
 void drawImage4(int row, int col, int height, int width, const unsigned short *image) {
 
-
     for(int r = 0; r < height; r++) {
         DMANow(3, &image[((r)*(width)+(0))/2], &videoBuffer[(((row + r))*(240)+(col))/2], width/2);
     }
@@ -178,7 +177,6 @@ void drawFullscreenImage3(const unsigned short *image) {
 
 
 void drawFullscreenImage4(const unsigned short *image) {
-
 
     DMANow(3, image, videoBuffer, (240 * 160) / 2);
 }
