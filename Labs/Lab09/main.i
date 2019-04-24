@@ -198,6 +198,7 @@ void goToGame() {
 
     DMANow(3, spritesheetTiles, &((charblock *)0x6000000)[4], 32768/2);
     DMANow(3, spritesheetPal, ((unsigned short *)0x5000200), 512/2);
+
     hideSprites();
     DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128*4);
 

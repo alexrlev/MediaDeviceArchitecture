@@ -125,7 +125,6 @@ extern const unsigned short collisionmapBitmap[65536];
 # 4 "game.c" 2
 
 
-
 int hOff;
 int vOff;
 OBJ_ATTR shadowOAM[128];
@@ -156,6 +155,7 @@ void drawGame() {
     drawPlayer();
 
     waitForVBlank();
+
     DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128*4);
 
     (*(volatile unsigned short *)0x04000010) = hOff;
@@ -269,11 +269,11 @@ void animatePlayer() {
 
 void drawPlayer() {
 
-    if (pikachu.hide) {
+
         shadowOAM[0].attr0 |= (2<<8);
-    } else {
+
         shadowOAM[0].attr0 = (0xFF & pikachu.screenRow) | (0<<14);
         shadowOAM[0].attr1 = (0x1FF & pikachu.screenCol) | (1<<14);
         shadowOAM[0].attr2 = ((0)<<12) | ((pikachu.curFrame * 2)*32+(pikachu.aniState * 2));
-    }
+
 }

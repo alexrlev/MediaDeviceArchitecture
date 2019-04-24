@@ -33,6 +33,7 @@ void drawGame() {
     drawPlayer();
 
     waitForVBlank();
+
     DMANow(3, shadowOAM, OAM, 128*4);
 
     REG_BG0HOFF = hOff;

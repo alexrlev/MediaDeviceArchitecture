@@ -50,10 +50,9 @@ void initialize() {
 // Sets up the game state
 void goToGame() {
 
-    // Make sure changes do not appear onscreen
     waitForVBlank();
 
-    // Set up the house background
+    // Set up the background
     DMANow(3, housePal, PALETTE, 256);
     DMANow(3, houseTiles, &CHARBLOCK[0], houseTilesLen/2);
     DMANow(3, houseMap, &SCREENBLOCK[31], houseMapLen/2);
@@ -64,6 +63,7 @@ void goToGame() {
     // Set up the sprites
     DMANow(3, spritesheetTiles, &CHARBLOCK[4], spritesheetTilesLen/2);
     DMANow(3, spritesheetPal, SPRITEPALETTE, spritesheetPalLen/2);
+
     hideSprites();
     DMANow(3, shadowOAM, OAM, 128*4);
 
