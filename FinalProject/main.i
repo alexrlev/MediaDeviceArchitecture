@@ -281,22 +281,16 @@ extern const unsigned short winGroundPal[256];
 # 20 "softJazz.h"
 extern const unsigned char softJazz[330750];
 # 12 "main.c" 2
-# 1 "cheatGround.h" 1
-# 22 "cheatGround.h"
-extern const unsigned short cheatGroundTiles[192];
-
-
-extern const unsigned short cheatGroundMap[6144];
-
-
-extern const unsigned short cheatGroundPal[256];
-# 13 "main.c" 2
 # 1 "numberSheet.h" 1
 # 21 "numberSheet.h"
 extern const unsigned short numberSheetTiles[16384];
 
 
 extern const unsigned short numberSheetPal[256];
+# 13 "main.c" 2
+# 1 "cheering.h" 1
+# 20 "cheering.h"
+extern const unsigned char cheering[496125];
 # 14 "main.c" 2
 
 void initialize();
@@ -308,6 +302,8 @@ void goToInstr();
 void instr();
 void goToPause();
 void pause();
+void goToCheatPause();
+void cheatPause();
 void goToLose();
 void lose();
 void goToWin();
@@ -327,7 +323,7 @@ OBJ_ATTR shadowOAM[128];
 SOUND soundA;
 
 
-typedef enum {START, INSTR, GAME, CHEAT, PAUSE, WIN, LOSE} states;
+typedef enum {START, INSTR, GAME, CHEAT, PAUSE, CHEATPAUSE, WIN, LOSE} states;
 states state;
 
 int main() {
@@ -356,6 +352,9 @@ int main() {
             case PAUSE:
                 pause();
                 break;
+            case CHEATPAUSE:
+             cheatPause();
+             break;
             case LOSE:
                 lose();
                 break;
@@ -504,18 +503,12 @@ void game() {
 }
 
 void goToCheat() {
- (*(unsigned short *)0x4000000) = (0<<0) | (1<<8) | (1<<12) | (1<<9);
+ (*(unsigned short *)0x4000000) = (0<<0) | (1<<12) | (1<<9);
 
  (*(volatile unsigned short*)0x400000A) = (0<<14) | (1<<7) | ((0)<<2) | ((26)<<8) | ((2)<<0);
  DMANow(3, backgroundPal, ((unsigned short *)0x5000000), 256);
  DMANow(3, backgroundTiles, &((charblock *)0x6000000)[0], 6144/2);
  DMANow(3, backgroundMap, &((screenblock *)0x6000000)[26], 2048/2);
-
- (*(volatile unsigned short*)0x4000008) = (1<<14) | (0<<7) | ((1)<<2) | ((30)<<8) | ((0)<<0);
- DMANow(3, cheatGroundTiles, &((charblock *)0x6000000)[1], 384/2);
- DMANow(3, cheatGroundMap, &((screenblock *)0x6000000)[30], 12288/2);
- (*(volatile unsigned short *)0x04000012) = vFOff;
-    (*(volatile unsigned short *)0x04000010) = hFOff;
 
  DMANow(3, spritesheetTiles, &((charblock *)0x6000000)[4], 32768/2);
     DMANow(3, spritesheetPal, ((unsigned short *)0x5000200), 512/2);
@@ -539,7 +532,7 @@ void cheat() {
   goToGame();
     }
  if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3))))) {
-  goToPause();
+  goToCheatPause();
  }
  if(moneyCounter <= 0) {
   goToLose();
@@ -580,6 +573,37 @@ void pause() {
  }
 }
 
+void goToCheatPause() {
+
+ waitForVBlank();
+
+ hideSprites();
+
+ (*(unsigned short *)0x4000000) = (0<<0) | (1<<8) | (1<<12);
+ (*(volatile unsigned short*)0x4000008) = (0<<14) | (1<<7) | ((0)<<2) | ((28)<<8);
+
+ DMANow(3, pauseGroundPal, ((unsigned short *)0x5000000), 256);
+ DMANow(3, pauseGroundTiles, &((charblock *)0x6000000)[0], 12352/2);
+ DMANow(3, pauseGroundMap, &((screenblock *)0x6000000)[28], 2048/2);
+
+ (*(volatile unsigned short *)0x04000012) = 0;
+    (*(volatile unsigned short *)0x04000010) = 0;
+
+ state = CHEATPAUSE;
+}
+
+void cheatPause() {
+
+ waitForVBlank();
+
+ if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3))))) {
+  goToCheat();
+ }
+ if((!(~(oldButtons)&((1<<2))) && (~buttons & ((1<<2))))) {
+  goToStart();
+ }
+}
+
 void goToLose() {
 
  waitForVBlank();
@@ -613,6 +637,8 @@ void goToWin() {
  waitForVBlank();
 
  hideSprites();
+
+ playSoundA(cheering, 496125, 11025, 1);
 
  (*(unsigned short *)0x4000000) = (0<<0) | (1<<8) | (1<<12);
  (*(volatile unsigned short*)0x4000008) = (0<<14) | (1<<7) | ((0)<<2) | ((31)<<8);

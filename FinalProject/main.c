@@ -9,8 +9,8 @@
 #include "frontground.h"
 #include "winGround.h"
 #include "softJazz.h"
-#include "cheatGround.h"
 #include "numberSheet.h"
+#include "cheering.h"
 
 void initialize();
 void goToGame();
@@ -21,6 +21,8 @@ void goToInstr();
 void instr();
 void goToPause();
 void pause();
+void goToCheatPause();
+void cheatPause();
 void goToLose();
 void lose();
 void goToWin();
@@ -40,7 +42,7 @@ OBJ_ATTR shadowOAM[128];
 SOUND soundA;
 
 //states
-typedef enum {START, INSTR, GAME, CHEAT, PAUSE, WIN, LOSE} states;
+typedef enum {START, INSTR, GAME, CHEAT, PAUSE, CHEATPAUSE, WIN, LOSE} states;
 states state;
 
 int main() {
@@ -69,6 +71,9 @@ int main() {
             case PAUSE:
                 pause();
                 break;
+            case CHEATPAUSE:
+            	cheatPause();
+            	break;
             case LOSE:
                 lose();
                 break;
@@ -217,18 +222,12 @@ void game() {
 }
 
 void goToCheat() {
-	REG_DISPCTL = MODE0 | BG0_ENABLE | SPRITE_ENABLE | BG1_ENABLE;
+	REG_DISPCTL = MODE0 | SPRITE_ENABLE | BG1_ENABLE;
 
 	REG_BG1CNT = BG_SIZE_SMALL | BG_8BPP | BG_CHARBLOCK(0) | BG_SCREENBLOCK(26) | BG_PRIORITY(2);
 	DMANow(3, backgroundPal, PALETTE, 256);
 	DMANow(3, backgroundTiles, &CHARBLOCK[0], backgroundTilesLen/2);
 	DMANow(3, backgroundMap, &SCREENBLOCK[26], backgroundMapLen/2);
-
-	REG_BG0CNT = BG_SIZE_WIDE | BG_4BPP | BG_CHARBLOCK(1) | BG_SCREENBLOCK(30) | BG_PRIORITY(0);
-	DMANow(3, cheatGroundTiles, &CHARBLOCK[1], cheatGroundTilesLen/2);
-	DMANow(3, cheatGroundMap, &SCREENBLOCK[30], cheatGroundMapLen/2);
-	REG_BG0VOFF = vFOff;
-    REG_BG0HOFF = hFOff;
 
 	DMANow(3, spritesheetTiles, &CHARBLOCK[4], spritesheetTilesLen/2);
     DMANow(3, spritesheetPal, SPRITEPALETTE, spritesheetPalLen/2);
@@ -252,7 +251,7 @@ void cheat() {
 		goToGame();
     }
 	if(BUTTON_PRESSED(BUTTON_START)) {
-		goToPause();
+		goToCheatPause();
 	}
 	if(moneyCounter <= 0) {
 		goToLose();
@@ -293,6 +292,37 @@ void pause() {
 	}
 }
 
+void goToCheatPause() {
+	
+	waitForVBlank();
+
+	hideSprites();
+
+	REG_DISPCTL = MODE0 | BG0_ENABLE | SPRITE_ENABLE;
+	REG_BG0CNT = BG_SIZE_SMALL | BG_8BPP | BG_CHARBLOCK(0) | BG_SCREENBLOCK(28);
+
+	DMANow(3, pauseGroundPal, PALETTE, 256);
+	DMANow(3, pauseGroundTiles, &CHARBLOCK[0], pauseGroundTilesLen/2);
+	DMANow(3, pauseGroundMap, &SCREENBLOCK[28], pauseGroundMapLen/2);
+
+	REG_BG0VOFF = 0;
+    REG_BG0HOFF = 0;
+
+	state = CHEATPAUSE;	
+}
+
+void cheatPause() {
+
+	waitForVBlank();
+
+	if(BUTTON_PRESSED(BUTTON_START)) {				
+		goToCheat();
+	}
+	if(BUTTON_PRESSED(BUTTON_SELECT)) {		
+		goToStart();
+	}
+}
+
 void goToLose() {
 	
 	waitForVBlank();
@@ -326,6 +356,8 @@ void goToWin() {
 	waitForVBlank();
 
 	hideSprites();
+
+	playSoundA(cheering, CHEERINGLEN, CHEERINGFREQ, 1);
 
 	REG_DISPCTL = MODE0 | BG0_ENABLE | SPRITE_ENABLE;
 	REG_BG0CNT = BG_SIZE_SMALL | BG_8BPP | BG_CHARBLOCK(0) | BG_SCREENBLOCK(31);

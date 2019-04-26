@@ -1,5 +1,5 @@
 PRODUCT_NAME       = FinalProject
-SOURCES            = main.c background.c collisionMap.c myLib.c spritesheet.c game.c startGround.c instrGround.c pauseGround.c loseGround.c frontground.c winGround.c sound.c chaChing.c softJazz.c cheatGround.c numberSheet.c
+SOURCES            = main.c background.c collisionMap.c myLib.c spritesheet.c game.c startGround.c instrGround.c pauseGround.c loseGround.c frontground.c winGround.c sound.c chaChing.c softJazz.c numberSheet.c cheering.c
 CCPATH             = C:\cygwin64\bin
 DKPATH             = C:\devkitPro
 VBASIM             = C:\vbam-2.0.1\bin\visualboyadvance-m.exe
